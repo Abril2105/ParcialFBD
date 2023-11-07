@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 public class Conexion {
     String bd = "";
     String url = "jdbc:mysql://localhost:3306/";
-    String user = "root";
-    String password = "12345";
+    String user = "";
+    String password = "";
     String driver = "com.mysql.cj.jdbc.Driver";
     Connection cx;
 
@@ -27,6 +27,23 @@ public class Conexion {
     public void setBd(String bd) {
         this.bd = bd;
     }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     
     
     

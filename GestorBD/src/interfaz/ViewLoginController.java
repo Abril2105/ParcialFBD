@@ -4,6 +4,7 @@
  */
 package interfaz;
 
+import gestorbd.Conexion;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -23,11 +24,11 @@ public class ViewLoginController implements Initializable {
     @FXML
     private TextField TF_Usuario;
     @FXML
-    private TextField TF_Contraseña;
-    @FXML
     private Button BT_Salir;
     @FXML
     private Button BT_Iniciar;
+    @FXML
+    private TextField TF_Contrasena;
 
     /**
      * Initializes the controller class.
@@ -41,6 +42,11 @@ public class ViewLoginController implements Initializable {
 
     @FXML
     private void Iniciar(ActionEvent event) {
+        Conexion conexion = new Conexion();
+        conexion.setUser(TF_Usuario.getText());
+        conexion.setPassword(TF_Contrasena.getText());
+        conexion.setBd("world");
+        conexion.conectar();
     }
     
     @FXML
