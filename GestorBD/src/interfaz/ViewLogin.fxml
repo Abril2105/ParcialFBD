@@ -20,6 +20,8 @@
       </Label>
       <TextField fx:id="TF_Usuario" layoutX="217.0" layoutY="141.0" />
       <TextField fx:id="TF_Contrasena" layoutX="217.0" layoutY="186.0" />
+      <TextField fx:id="TF_Servidor" layoutX="217.0" layoutY="231.0" />
+      <TextField fx:id="TF_Puerto" layoutX="217.0" layoutY="276.0" />
       <Label layoutX="217.0" layoutY="121.0" prefHeight="20.0" prefWidth="56.0" text="Usuario:">
          <font>
             <Font size="14.0" />
@@ -32,8 +34,6 @@
       </Label>
       <Button fx:id="BT_Salir" layoutX="171.0" layoutY="325.0" mnemonicParsing="false" onAction="#salir" prefHeight="45.0" prefWidth="101.0" text="Salir" />
       <Button fx:id="BT_Iniciar" layoutX="320.0" layoutY="325.0" mnemonicParsing="false" onAction="#Iniciar" prefHeight="45.0" prefWidth="101.0" text="Iniciar" />
-      <TextField fx:id="TF_Servidor" layoutX="217.0" layoutY="231.0" />
-      <TextField fx:id="TF_Puerto" layoutX="217.0" layoutY="276.0" />
       <Label layoutX="217.0" layoutY="211.0" prefHeight="20.0" prefWidth="56.0" text="Servidor:">
          <font>
             <Font size="14.0" />

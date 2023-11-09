@@ -7,18 +7,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Conexion {
-    String bd = "";
-    String url = "";
-    String user = "";
-    String password = "";
-    String driver = "com.mysql.cj.jdbc.Driver";
-    Connection cx;
+    private String bd = "";
+    private String url = "";
+    private String user = "";
+    private String password = "";
+    private String driver = "com.mysql.cj.jdbc.Driver";
+    private Connection cx;
 
     //Constructor
     public Conexion() {
         this.cx = cx;
     }
-
     //Getters y Setters
     public String getBd() {
         return bd;
@@ -48,6 +47,16 @@ public class Conexion {
         return url;
     }
 
+    public Connection getCx() {
+        return cx;
+    }
+
+    public void setCx(Connection cx) {
+        this.cx = cx;
+    }
+    
+    
+
     public void setUrl(String servidor, String puerto) {
         this.url = "jdbc:mysql://" + servidor + ":" + puerto + "/";
     }
@@ -56,7 +65,7 @@ public class Conexion {
     public Connection conectar(){
         try {
             Class.forName(driver);
-            cx = DriverManager.getConnection(url+bd, user, password);
+            cx = DriverManager.getConnection(url, user, password);
             System.out.println("SE CONECTO A LA BASE DE DATOS " + bd);
             System.out.println(cx);
         } catch (ClassNotFoundException | SQLException ex) {
