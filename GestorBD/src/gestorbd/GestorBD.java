@@ -23,7 +23,7 @@ public class GestorBD extends Application{
         Parent root = FXMLLoader.load(getClass().getResource("/interfaz/ViewLogin.fxml")); //Arma la ventana con el XML
         Scene scene = new Scene(root);
         ventana.setScene(scene);
-        ventana.setTitle("Calculadora");
+        ventana.setTitle("GestorBD");
         ventana.setResizable(false);  // No se puede cambiar el tamaño de la ventana
         ventana.setOnCloseRequest(event -> {event.consume();}); //Desabilitar la X
         ventana.show();   //Muestra la ventana
