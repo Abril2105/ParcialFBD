@@ -13,24 +13,36 @@
             <Font name="Arial Black" size="30.0" />
          </font>
       </Label>
-      <Label layoutX="199.0" layoutY="101.0" prefHeight="20.0" prefWidth="197.0" text="Ingrese sus datos para ingresar">
+      <Label layoutX="198.0" layoutY="90.0" prefHeight="20.0" prefWidth="197.0" text="Ingrese sus datos para ingresar">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="TF_Usuario" layoutX="218.0" layoutY="168.0" />
-      <TextField fx:id="TF_Contrasena" layoutX="218.0" layoutY="228.0" />
-      <Label layoutX="218.0" layoutY="148.0" prefHeight="20.0" prefWidth="56.0" text="Usuario:">
+      <TextField fx:id="TF_Usuario" layoutX="217.0" layoutY="141.0" />
+      <TextField fx:id="TF_Contrasena" layoutX="217.0" layoutY="186.0" />
+      <Label layoutX="217.0" layoutY="121.0" prefHeight="20.0" prefWidth="56.0" text="Usuario:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="218.0" layoutY="208.0" prefHeight="20.0" prefWidth="79.0" text="Contraseña:">
+      <Label layoutX="217.0" layoutY="166.0" prefHeight="20.0" prefWidth="79.0" text="Contraseña:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="BT_Salir" layoutX="173.0" layoutY="304.0" mnemonicParsing="false" onAction="#salir" prefHeight="45.0" prefWidth="101.0" text="Salir" />
-      <Button fx:id="BT_Iniciar" layoutX="322.0" layoutY="304.0" mnemonicParsing="false" onAction="#Iniciar" prefHeight="45.0" prefWidth="101.0" text="Iniciar" />
+      <Button fx:id="BT_Salir" layoutX="171.0" layoutY="325.0" mnemonicParsing="false" onAction="#salir" prefHeight="45.0" prefWidth="101.0" text="Salir" />
+      <Button fx:id="BT_Iniciar" layoutX="320.0" layoutY="325.0" mnemonicParsing="false" onAction="#Iniciar" prefHeight="45.0" prefWidth="101.0" text="Iniciar" />
+      <TextField fx:id="TF_Servidor" layoutX="217.0" layoutY="231.0" />
+      <TextField fx:id="TF_Puerto" layoutX="217.0" layoutY="276.0" />
+      <Label layoutX="217.0" layoutY="211.0" prefHeight="20.0" prefWidth="56.0" text="Servidor:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="217.0" layoutY="256.0" prefHeight="20.0" prefWidth="79.0" text="Puerto:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

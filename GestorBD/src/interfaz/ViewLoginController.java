@@ -29,6 +29,10 @@ public class ViewLoginController implements Initializable {
     private Button BT_Iniciar;
     @FXML
     private TextField TF_Contrasena;
+    @FXML
+    private TextField TF_Servidor;
+    @FXML
+    private TextField TF_Puerto;
 
     /**
      * Initializes the controller class.
@@ -46,6 +50,7 @@ public class ViewLoginController implements Initializable {
         conexion.setUser(TF_Usuario.getText());
         conexion.setPassword(TF_Contrasena.getText());
         conexion.setBd("world");
+        conexion.setUrl(TF_Servidor.getText(),TF_Puerto.getText());
         conexion.conectar();
     }
     
