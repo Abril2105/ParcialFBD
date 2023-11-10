@@ -18,10 +18,10 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="TF_Usuario" layoutX="217.0" layoutY="141.0" />
-      <TextField fx:id="TF_Contrasena" layoutX="217.0" layoutY="186.0" />
-      <TextField fx:id="TF_Servidor" layoutX="217.0" layoutY="231.0" />
-      <TextField fx:id="TF_Puerto" layoutX="217.0" layoutY="276.0" />
+      <TextField fx:id="TF_Usuario" layoutX="217.0" layoutY="141.0" text="root" />
+      <TextField fx:id="TF_Contrasena" layoutX="217.0" layoutY="186.0" text="12345" />
+      <TextField fx:id="TF_Servidor" layoutX="217.0" layoutY="231.0" text="localhost" />
+      <TextField fx:id="TF_Puerto" layoutX="217.0" layoutY="276.0" text="3306" />
       <Label layoutX="217.0" layoutY="121.0" prefHeight="20.0" prefWidth="56.0" text="Usuario:">
          <font>
             <Font size="14.0" />
