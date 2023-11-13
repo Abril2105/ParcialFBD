@@ -139,8 +139,8 @@ public class ViewBasesDatosController implements Initializable {
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             try {
                 Statement statement = cx.createStatement();
-                String sql = "DROP DATABASE " + baseSelect;
-                statement.executeUpdate(sql);
+                String sqlDropDB = "DROP DATABASE " + baseSelect;
+                statement.executeUpdate(sqlDropDB);
 
                 // Mostrar una alerta de éxito
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

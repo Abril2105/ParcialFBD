@@ -9,6 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -18,9 +21,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import java.util.ArrayList;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.GridPane;
 
 /**
  * FXML Controller class
@@ -31,15 +43,20 @@ public class ViewTablasController implements Initializable {
 
     //ID FXML
     @FXML
-    private Button BT_UsarTabla;
+    private Button BT_Registro;
     @FXML
-    private Button BT_CrearTabla;
+    private Button BT_Estructura;
     @FXML
     private Button BT_EliminarTabla;
+    @FXML
+    private Button BT_Consuta;
+    @FXML
+    private Button BT_CrearTabla;
     @FXML
     private Button BT_Salir;
     @FXML
     private Button BT_Volver;
+
     @FXML
     private TableView<String> TV_Tablas;
 
@@ -72,8 +89,6 @@ public class ViewTablasController implements Initializable {
     public void setTablaSelect(String tablaSelect) {
         this.tablaSelect = tablaSelect;
     }
-    
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -84,16 +99,93 @@ public class ViewTablasController implements Initializable {
     }
 
     @FXML
-    private void UsarTabla(ActionEvent event) {
-        System.out.println(getTablaSelect());
+    private void VerRegistro(ActionEvent event) {
     }
 
     @FXML
-    private void CrearTabla(ActionEvent event) {
+    private void VerEstructura(ActionEvent event) {
     }
 
     @FXML
     private void EliminarTabla(ActionEvent event) {
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmar eliminación");
+        confirmacion.setHeaderText("Eliminar Tabla");
+        confirmacion.setContentText("¿Estás seguro de que quieres eliminar la tabla '" + tablaSelect + "'?");
+        Optional<ButtonType> resultado = confirmacion.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            try {
+                Statement statement = cx.createStatement();
+                String sqlSelectBD = "USE " + baseSelect;
+                String sqlDropTable = "DROP TABLE " + tablaSelect;
+                statement.executeUpdate(sqlSelectBD);
+                statement.executeUpdate(sqlDropTable);
+
+                // Mostrar una alerta de éxito
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Tabla Eliminada");
+                alert.setHeaderText("La Tabla se eliminó exitosamente.");
+                alert.setContentText("Nombre: " + tablaSelect);
+                alert.showAndWait();
+                setTablaSelect(null);
+                cargarTablas();
+            } catch (SQLException e) {
+                mostrarAlertaError(e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void HacerConsulta(ActionEvent event) {
+    }
+
+    @FXML
+    private void CrearTabla(ActionEvent event) {
+        String nombreTabla = mostrarDialogoNombreTabla();
+        if (nombreTabla != null) {
+            int cantidadColumnas = mostrarDialogoCantidadColumnas();
+            if (cantidadColumnas > 0) {
+                List<Columna> columnas = mostrarDialogoDetallesColumnas(cantidadColumnas);
+                if (!columnas.isEmpty()) {
+                    try {
+                        Connection connection = cx;
+                        if (connection != null) {
+                            // Preparar la sentencia SQL para crear la nueva tabla
+                            String crear = "CREATE TABLE " + nombreTabla + " (";
+                            for (int i = 0; i < columnas.size(); i++) {
+                                Columna columna = columnas.get(i);
+                                crear = crear + columna.getNombre() + " " + columna.getTipo();
+                                if (i < columnas.size() - 1) {
+                                    crear = crear + ", ";
+                                }
+                            }
+                            crear = crear + ")";
+                            System.out.println(crear);
+                            
+                            Statement Statement = connection.createStatement();
+                            connection.createStatement().executeUpdate("USE " + baseSelect);
+                            Statement.executeUpdate(crear);
+
+                            // Actualizar la lista de tablas después de crear la nueva tabla
+                            cargarTablas();
+
+                            // Mostrar un mensaje de éxito
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Creación completa");
+                            alert.setHeaderText("La tabla se creó correctamente");
+                            alert.setContentText("Nombre: " + nombreTabla);
+                            alert.showAndWait();                            
+                        } else {
+                            mostrarAlertaError("No se pudo establecer la conexión");
+                        }
+                    } catch (SQLException e) {
+                        mostrarAlertaError(e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     @FXML
@@ -120,11 +212,13 @@ public class ViewTablasController implements Initializable {
             }
             TV_Tablas.setItems(tablas);
 
-            BT_UsarTabla.setDisable(true);
+            BT_Registro.setDisable(true);
+            BT_Estructura.setDisable(true);
             BT_EliminarTabla.setDisable(true);
-            
+
             TV_Tablas.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                BT_UsarTabla.setDisable(false);
+                BT_Registro.setDisable(false);
+                BT_Estructura.setDisable(false);
                 BT_EliminarTabla.setDisable(false);
                 setTablaSelect(TV_Tablas.getSelectionModel().getSelectedItem());
             });
@@ -135,6 +229,109 @@ public class ViewTablasController implements Initializable {
             alert.setContentText(e.getMessage());
             alert.show();
             System.out.println("El objeto conector no ha sido configurado correctamente.");
+        }
+    }
+
+    private void mostrarAlertaError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    //Crear tablas y columnas
+    private String mostrarDialogoNombreTabla() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Nueva Tabla");
+        dialog.setHeaderText("Ingrese el nombre de la nueva tabla");
+        dialog.setContentText("Nombre:");
+
+        Optional<String> resultado = dialog.showAndWait();
+        return resultado.orElse(null);
+    }
+
+    private int mostrarDialogoCantidadColumnas() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Nueva Tabla");
+        dialog.setHeaderText("Ingrese la cantidad de columnas");
+        dialog.setContentText("Cantidad:");
+
+        Optional<String> resultado = dialog.showAndWait();
+        if (resultado.isPresent()) {
+            try {
+                return Integer.parseInt(resultado.get());
+            } catch (NumberFormatException e) {
+                // El valor ingresado no es un número válido
+                mostrarAlertaError("Ingrese un valor numérico válido");
+            }
+        }
+        return 0;
+    }
+
+    private List<Columna> mostrarDialogoDetallesColumnas(int cantidadColumnas) {
+        List<Columna> columnas = new ArrayList<>();
+
+        for (int i = 0; i < cantidadColumnas; i++) {
+            Dialog<Columna> dialog = new Dialog<>();
+            dialog.setTitle("Nueva Tabla");
+            dialog.setHeaderText("Ingrese los detalles de la columna " + (i + 1));
+
+            ButtonType crearButton = new ButtonType("Crear", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(crearButton, ButtonType.CANCEL);
+
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+
+            TextField nombreField = new TextField();
+            ComboBox<String> tipoComboBox = new ComboBox<>();
+            tipoComboBox.getItems().addAll("VARCHAR(30)", "INTEGER", "BOOLEAN", "FLOAT", "DOUBLE");
+
+            gridPane.add(new Label("Nombre:"), 0, 0);
+            gridPane.add(nombreField, 1, 0);
+            gridPane.add(new Label("Tipo:"), 0, 1);
+            gridPane.add(tipoComboBox, 1, 1);
+
+            dialog.getDialogPane().setContent(gridPane);
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == crearButton) {
+                    String nombre = nombreField.getText();
+                    String tipo = tipoComboBox.getValue();
+
+                    if (nombre.isEmpty() || tipo == null) {
+                        mostrarAlertaError("Ingrese todos los detalles de la columna");
+                        return null;
+                    }
+
+                    return new Columna(nombre, tipo);
+                }
+                return null;
+            });
+
+            Optional<Columna> resultado = dialog.showAndWait();
+            resultado.ifPresent(columnas::add);
+        }
+
+        return columnas;
+    }
+
+    private static class Columna {
+
+        private final String nombre;
+        private final String tipo;
+
+        public Columna(String nombre, String tipo) {
+            this.nombre = nombre;
+            this.tipo = tipo;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public String getTipo() {
+            return tipo;
         }
     }
 }
