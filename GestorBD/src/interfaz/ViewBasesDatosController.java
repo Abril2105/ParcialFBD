@@ -5,6 +5,7 @@
 package interfaz;
 
 import gestorbd.Conexion;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +20,10 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -27,6 +31,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -36,6 +41,7 @@ import javafx.stage.Stage;
  */
 public class ViewBasesDatosController implements Initializable {
 
+    //ID FXML
     @FXML
     private Button BT_UsarBD;
     @FXML
@@ -49,13 +55,11 @@ public class ViewBasesDatosController implements Initializable {
     @FXML
     private TableView<String> TV_DB;
 
+    //Variables
     private Connection cx;
-
     private String baseSelect;
-    
-    private Stage stage2;
-    Stage currentStage = stage2;
 
+    //Getters y Setters
     public Connection getCx() {
         return cx;
     }
@@ -64,12 +68,20 @@ public class ViewBasesDatosController implements Initializable {
         this.cx = cx;
     }
 
+    public String getBaseSelect() {
+        return baseSelect;
+    }
+
+    public void setBaseSelect(String baseSelect) {
+        this.baseSelect = baseSelect;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        TableColumn<String, String> BC_Bases = new TableColumn<>("Bases de datos");
-        BC_Bases.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
-        TV_DB.getColumns().add(BC_Bases);
-        BC_Bases.prefWidthProperty().bind(TV_DB.widthProperty());
+        TableColumn<String, String> TC_Bases = new TableColumn<>("Bases de datos");
+        TC_Bases.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+        TV_DB.getColumns().add(TC_Bases);
+        TC_Bases.prefWidthProperty().bind(TV_DB.widthProperty());
     }
 
     @FXML
@@ -79,7 +91,11 @@ public class ViewBasesDatosController implements Initializable {
 
     @FXML
     private void UsarBD(ActionEvent event) {
-        System.out.println(baseSelect);
+        if (baseSelect != null) {
+            abrirViewTablas();
+        } else {
+            System.out.println("Seleccione una BD");
+        }
     }
 
     @FXML
@@ -92,21 +108,16 @@ public class ViewBasesDatosController implements Initializable {
         dialog.showAndWait().ifPresent(nombreBaseDatos -> {
             if (!nombreBaseDatos.trim().isEmpty()) {
                 try {
-                    Connection connection = cx;
-                    if (connection != null) {
-                        Statement statement = connection.createStatement();
-                        String sql = "CREATE DATABASE " + nombreBaseDatos;
-                        statement.executeUpdate(sql);
+                    Statement statement = cx.createStatement();
+                    String sql = "CREATE DATABASE " + nombreBaseDatos;
+                    statement.executeUpdate(sql);
 
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Nueva Base de Datos");
-                        alert.setHeaderText("La base de datos se creó exitosamente.");
-                        alert.setContentText("Nombre: " + nombreBaseDatos);
-                        alert.showAndWait();
-                        cargarBD();
-                    } else {
-                        mostrarAlertaError("No se pudo establecer la conexión");
-                    }
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Nueva Base de Datos");
+                    alert.setHeaderText("La base de datos se creó exitosamente.");
+                    alert.setContentText("Nombre: " + nombreBaseDatos);
+                    alert.showAndWait();
+                    cargarBD();
                 } catch (SQLException e) {
                     mostrarAlertaError(e.getMessage());
                 }
@@ -127,22 +138,18 @@ public class ViewBasesDatosController implements Initializable {
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             try {
-                Connection connection = cx;
-                if (connection != null) {
-                    Statement statement = connection.createStatement();
-                    String sql = "DROP DATABASE " + baseSelect;
-                    statement.executeUpdate(sql);
+                Statement statement = cx.createStatement();
+                String sqlDropDB = "DROP DATABASE " + baseSelect;
+                statement.executeUpdate(sqlDropDB);
 
-                    // Mostrar una alerta de éxito
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Base de Datos Eliminada");
-                    alert.setHeaderText("La base de datos se eliminó exitosamente.");
-                    alert.setContentText("Nombre: " + baseSelect);
-                    alert.showAndWait();
-                    cargarBD();
-                } else {
-                    mostrarAlertaError("No se pudo establecer la conexión");
-                }
+                // Mostrar una alerta de éxito
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Base de Datos Eliminada");
+                alert.setHeaderText("La base de datos se eliminó exitosamente.");
+                alert.setContentText("Nombre: " + baseSelect);
+                alert.showAndWait();
+                setBaseSelect(null);
+                cargarBD();
             } catch (SQLException e) {
                 mostrarAlertaError(e.getMessage());
             }
@@ -157,32 +164,25 @@ public class ViewBasesDatosController implements Initializable {
 
     public void cargarBD() {
         try {
-            if (cx != null) {
-                PreparedStatement preparedStatement = cx.prepareStatement("SELECT schema_name FROM information_schema.schemata");
-                ResultSet resultSet = preparedStatement.executeQuery();
+            PreparedStatement preparedStatement = cx.prepareStatement("SELECT schema_name FROM information_schema.schemata");
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-                ObservableList<String> basesDeDatos = FXCollections.observableArrayList();
-                while (resultSet.next()) {
-                    String nombre = resultSet.getString("schema_name");
-                    basesDeDatos.add(nombre);
-                    System.out.println(nombre);
-                }
-                TV_DB.setItems(basesDeDatos);
-                
-                BT_UsarBD.setDisable(true);
-                BT_EliminarBD.setDisable(true);
-
-                TV_DB.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                    BT_UsarBD.setDisable(false);
-                    BT_EliminarBD.setDisable(false);
-                    baseSelect = TV_DB.getSelectionModel().getSelectedItem();
-                });
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setContentText("No se pudo establecer la conexión");
-                alert.show();
+            ObservableList<String> basesDeDatos = FXCollections.observableArrayList();
+            while (resultSet.next()) {
+                String nombre = resultSet.getString("schema_name");
+                basesDeDatos.add(nombre);
+                System.out.println(nombre);
             }
+            TV_DB.setItems(basesDeDatos);
+
+            BT_UsarBD.setDisable(true);
+            BT_EliminarBD.setDisable(true);
+
+            TV_DB.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                BT_UsarBD.setDisable(false);
+                BT_EliminarBD.setDisable(false);
+                setBaseSelect(TV_DB.getSelectionModel().getSelectedItem());
+            });
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -195,8 +195,37 @@ public class ViewBasesDatosController implements Initializable {
     private void mostrarAlertaError(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText("mensaje");
+        alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    private void abrirViewTablas() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewTablas.fxml"));
+            Parent root = loader.load();
+            ViewTablasController viewTablas = loader.getController();
+            viewTablas.setCx(getCx());
+            viewTablas.setBaseSelect(getBaseSelect());
+            if ((viewTablas.getBaseSelect() != null) && (viewTablas.getCx() != null)) {
+                viewTablas.cargarTablas();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);  // No se puede cambiar el tamaño de la ventana
+                stage.setOnCloseRequest(event -> {
+                    event.consume();
+                }); //Desabilitar la X
+                stage.setScene(scene);
+                stage.showAndWait();
+            }else{
+                System.out.println("Error");
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error");
+        }
+
     }
 
 }

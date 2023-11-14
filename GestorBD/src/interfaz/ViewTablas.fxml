@@ -6,12 +6,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="interfaz.ViewTablasController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ViewTablasController">
    <children>
-      <Button fx:id="BT_UsarTabla" layoutX="420.0" layoutY="134.0" mnemonicParsing="false" onAction="#UsarTabla" text="Usar Tabla" />
-      <Button fx:id="BT_CrearTabla" layoutX="418.0" layoutY="264.0" mnemonicParsing="false" onAction="#CrearTabla" text="Crear Tabla" />
-      <Button fx:id="BT_EliminarTabla" layoutX="411.0" layoutY="169.0" mnemonicParsing="false" onAction="#EliminarTabla" text="Eliminar Tabla" />
+      <Button fx:id="BT_Registro" layoutX="414.0" layoutY="109.0" mnemonicParsing="false" onAction="#VerRegistro" text="Ver registros" />
+      <Button fx:id="BT_Consuta" layoutX="408.0" layoutY="248.0" mnemonicParsing="false" onAction="#HacerConsulta" text="Hacer Consulta" />
+      <Button fx:id="BT_EliminarTabla" layoutX="411.0" layoutY="175.0" mnemonicParsing="false" onAction="#EliminarTabla" text="Eliminar Tabla" />
       <Label layoutX="400.0" layoutY="27.0" prefHeight="45.0" prefWidth="112.0" text="Tablas">
          <font>
             <Font name="Arial Black" size="30.0" />
@@ -25,5 +24,7 @@
       <Button fx:id="BT_Salir" layoutX="331.0" layoutY="348.0" mnemonicParsing="false" onAction="#salir" prefHeight="25.0" prefWidth="101.0" text="Salir" />
       <Button fx:id="BT_Volver" layoutX="484.0" layoutY="348.0" mnemonicParsing="false" onAction="#Volver" prefHeight="22.0" prefWidth="101.0" text="Volver" />
       <TableView fx:id="TV_Tablas" layoutX="24.0" layoutY="26.0" prefHeight="349.0" prefWidth="276.0" />
+      <Button fx:id="BT_Estructura" layoutX="410.0" layoutY="140.0" mnemonicParsing="false" onAction="#VerEstructura" text="Ver estructura" />
+      <Button fx:id="BT_CrearTabla" layoutX="418.0" layoutY="284.0" mnemonicParsing="false" onAction="#CrearTabla" text="Crear Tabla" />
    </children>
 </AnchorPane>

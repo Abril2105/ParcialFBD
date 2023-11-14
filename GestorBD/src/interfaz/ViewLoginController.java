@@ -28,6 +28,7 @@ import javafx.stage.Stage;
  */
 public class ViewLoginController implements Initializable {
 
+    //ID FXML
     @FXML
     private TextField TF_Usuario;
     @FXML
@@ -40,7 +41,8 @@ public class ViewLoginController implements Initializable {
     private TextField TF_Servidor;
     @FXML
     private TextField TF_Puerto;
-    
+
+    //Variables
     private Conexion conexion;
 
     /**
@@ -49,44 +51,48 @@ public class ViewLoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         conexion = new Conexion();
-    }    
-
-    
+    }
 
     @FXML
     private void Iniciar(ActionEvent event) {
         conexion.setUser(TF_Usuario.getText());
         conexion.setPassword(TF_Contrasena.getText());
-        conexion.setUrl(TF_Servidor.getText(),TF_Puerto.getText());
+        conexion.setUrl(TF_Servidor.getText(), TF_Puerto.getText());
         conexion.conectar();
-        if(conexion.getCx() != null){
+        if (conexion.getCx() != null) {
             abrirViewBD();
-        }else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText("Error en la conexión");
             alert.show();
         }
     }
-    
+
     @FXML
     private void salir(ActionEvent event) {
         System.exit(0);
     }
-    private void abrirViewBD(){
+
+    private void abrirViewBD() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewBasesDatos.fxml"));
             Parent root = loader.load();
             ViewBasesDatosController viewBasesDatos = loader.getController();
             viewBasesDatos.setCx(conexion.getCx());
-            viewBasesDatos.cargarBD();
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);  // No se puede cambiar el tamaño de la ventana
-            stage.setOnCloseRequest(event -> {event.consume();}); //Desabilitar la X
-            stage.setScene(scene);
-            stage.showAndWait();
+            
+            if (viewBasesDatos.getCx() != null) {
+                viewBasesDatos.cargarBD();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);  // No se puede cambiar el tamaño de la ventana
+                stage.setOnCloseRequest(event -> {event.consume();}); //Desabilitar la X
+                stage.setScene(scene);
+                stage.showAndWait();
+            } else {
+                System.out.println("Error");
+            }
 
         } catch (IOException ex) {
             System.out.println("Error");
