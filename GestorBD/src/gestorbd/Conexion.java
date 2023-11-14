@@ -55,13 +55,12 @@ public class Conexion {
         this.cx = cx;
     }
     
-    
-
+    //Creacion URL para JDBC
     public void setUrl(String servidor, String puerto) {
         this.url = "jdbc:mysql://" + servidor + ":" + puerto + "/";
     }
     
-    
+    //Coneccion con MySQL
     public Connection conectar(){
         try {
             Class.forName(driver);
