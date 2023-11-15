@@ -4,6 +4,7 @@
  */
 package interfaz;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,6 +27,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -33,6 +37,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 
 /**
  * FXML Controller class
@@ -103,7 +108,12 @@ public class ViewTablasController implements Initializable {
     }
 
     @FXML
-    private void VerEstructura(ActionEvent event) {
+    private void VerEstructura(ActionEvent event) throws SQLException {
+        if (baseSelect != null) {
+            abrirViewestructuraTabla();
+        } else {
+            System.out.println("Seleccione una BD");
+        }
     }
 
     @FXML
@@ -162,7 +172,7 @@ public class ViewTablasController implements Initializable {
                             }
                             crear = crear + ")";
                             System.out.println(crear);
-                            
+
                             Statement Statement = connection.createStatement();
                             connection.createStatement().executeUpdate("USE " + baseSelect);
                             Statement.executeUpdate(crear);
@@ -175,7 +185,7 @@ public class ViewTablasController implements Initializable {
                             alert.setTitle("Creación completa");
                             alert.setHeaderText("La tabla se creó correctamente");
                             alert.setContentText("Nombre: " + nombreTabla);
-                            alert.showAndWait();                            
+                            alert.showAndWait();
                         } else {
                             mostrarAlertaError("No se pudo establecer la conexión");
                         }
@@ -314,6 +324,34 @@ public class ViewTablasController implements Initializable {
         }
 
         return columnas;
+    }
+
+    private void abrirViewestructuraTabla() throws SQLException {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewEstructuraTabla.fxml"));
+            Parent root = loader.load();
+            ViewEstructuraTablaController viewEstructuraTabla = loader.getController();
+            viewEstructuraTabla.setCx(getCx());
+            viewEstructuraTabla.setBaseSelect(getBaseSelect());
+            viewEstructuraTabla.setTablaSelect(getTablaSelect());
+            if ((viewEstructuraTabla.getBaseSelect() != null) && (viewEstructuraTabla.getCx() != null) && (viewEstructuraTabla.getTablaSelect()!= null)) {
+                viewEstructuraTabla.mostrarEstructura();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);  // No se puede cambiar el tamaño de la ventana
+                stage.setOnCloseRequest(event -> {
+                    event.consume();
+                }); //Desabilitar la X
+                stage.setScene(scene);
+                stage.showAndWait();
+            } else {
+                System.out.println("Error 1");
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error 2");
+        }
     }
 
     private static class Columna {
