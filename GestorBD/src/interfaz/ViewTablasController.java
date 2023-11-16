@@ -104,7 +104,12 @@ public class ViewTablasController implements Initializable {
     }
 
     @FXML
-    private void VerRegistro(ActionEvent event) {
+    private void VerRegistro(ActionEvent event) throws SQLException {
+        if (baseSelect != null) {
+            abrirViewregistrosTabla();
+        } else {
+            System.out.println("Seleccione una BD");
+        }
     }
 
     @FXML
@@ -370,6 +375,34 @@ public class ViewTablasController implements Initializable {
 
         public String getTipo() {
             return tipo;
+        }
+    }
+    
+    private void abrirViewregistrosTabla() throws SQLException {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewRegistroTabla.fxml"));
+            Parent root = loader.load();
+            ViewRegistroTablaController viewRegistroTabla = loader.getController();
+            viewRegistroTabla.setCx(getCx());
+            viewRegistroTabla.setBaseSelect(getBaseSelect());
+            viewRegistroTabla.setTablaSelect(getTablaSelect());
+            if ((viewRegistroTabla.getBaseSelect() != null) && (viewRegistroTabla.getCx() != null) && (viewRegistroTabla.getTablaSelect()!= null)) {
+                viewRegistroTabla.mostrarRegistros();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);  // No se puede cambiar el tamaño de la ventana
+                stage.setOnCloseRequest(event -> {
+                    event.consume();
+                }); //Desabilitar la X
+                stage.setScene(scene);
+                stage.showAndWait();
+            } else {
+                System.out.println("Error 1");
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error 2");
         }
     }
 }
