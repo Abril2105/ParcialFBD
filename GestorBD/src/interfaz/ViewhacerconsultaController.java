@@ -33,17 +33,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javax.swing.JOptionPane;
 import java.sql.ResultSetMetaData;
-
-
-
+import javafx.scene.text.Text;
 
 /**
  * FXML Controller class
  *
- * 
+ *
  */
-
-
 public class ViewhacerconsultaController implements Initializable {
 
     @FXML
@@ -67,10 +63,12 @@ public class ViewhacerconsultaController implements Initializable {
     @FXML
     private ComboBox<String> Select_operador2;
     private String Select_Busqueda;
-    
-    private Connection  cx;
+
+    private Connection cx;
     private String baseSelect;
-    
+    String[] Uniones = {"And", "Or"};
+    String[] Operadores = {"=", ">", "<", "<=", ">=", "<>", "Is Null", "Is Not Null", "Like", "Not Like"};
+
     @FXML
     private CheckBox Add_condicion;
     @FXML
@@ -87,6 +85,12 @@ public class ViewhacerconsultaController implements Initializable {
     private TableView<?> Tabla;
     @FXML
     private Button Vista;
+    @FXML
+    private ComboBox<String> Select_Union;
+    @FXML
+    private Text text;
+    @FXML
+    private Button BT_Salir;
 
     //Getters y Setters
     public Connection getCx() {
@@ -95,7 +99,7 @@ public class ViewhacerconsultaController implements Initializable {
 
     public void setCx(Connection cx) {
         this.cx = cx;
-        
+
     }
 
     public String getBaseSelect() {
@@ -105,161 +109,161 @@ public class ViewhacerconsultaController implements Initializable {
     public void setBaseSelect(String baseSelect) {
         this.baseSelect = baseSelect;
     }
-    
+
     @FXML
-    public void select_tablauno() throws SQLException{
+    public void select_tablauno() throws SQLException {
         this.Select_Tabla2.getItems().clear();
         this.Select_Columna1.getItems().clear();
         this.Select_num_columnas.getCheckModel().clearChecks();
         this.Select_num_columnas.getItems().clear();
         this.Select_campo1.getItems().clear();
         this.Select_campo2.getItems().clear();
-        
-        
+
         //fill T2, colum1, checkcolum and Campo1-2 after every change 
-        try{
-            //Statement st = cx.createStatement();
+        try {
             PreparedStatement preparedStatement = cx.prepareStatement("SHOW TABLES IN " + baseSelect);
             ResultSet resultSet = preparedStatement.executeQuery();
-            
 
             ObservableList<String> listadeTablas = FXCollections.observableArrayList();
-              while (resultSet.next()) {
-                  String nombre = resultSet.getString(1);
-                  listadeTablas.add(nombre);
-                  System.out.println(nombre);
-              }
-              Select_Tabla2.setItems(listadeTablas);
-              Select_Tabla2.getItems().removeAll(Select_Tabla1.getValue());
-              
-        }catch(Exception e){}
-        
-        try{ //Colum1, columscheck, campo1-2
-            String queue2 = "describe "+baseSelect+"."+Select_Tabla1.getValue();
+            while (resultSet.next()) {
+                String nombre = resultSet.getString(1);
+                listadeTablas.add(nombre);
+                System.out.println(nombre);
+            }
+            Select_Tabla2.setItems(listadeTablas);
+            Select_Tabla2.getItems().removeAll(Select_Tabla1.getValue());
+
+        } catch (Exception e) {
+        }
+
+        try { //Colum1, columscheck, campo1-2
+            String queue2 = "describe " + baseSelect + "." + Select_Tabla1.getValue();
             PreparedStatement preparedStatement = cx.prepareStatement(queue2);
             ResultSet resultSet = preparedStatement.executeQuery();
-            
-            while(resultSet.next()){
+
+            while (resultSet.next()) {
                 Select_Columna1.getItems().addAll(resultSet.getString(1));
                 Select_num_columnas.getItems().addAll(resultSet.getString(1));
                 Select_campo1.getItems().addAll(resultSet.getString(1));
                 Select_campo2.getItems().addAll(resultSet.getString(1));
             }
-        }catch(Exception e){}   
-        
+        } catch (Exception e) {
+        }
+
         //fill if T2
-        if(this.Add_Tabla2.isSelected() == true){
+        if (this.Add_Tabla2.isSelected() == true) {
             this.Select_num_columnas.getItems().clear();
             this.Select_num_columnas.getCheckModel().clearChecks();
             this.Select_campo1.getItems().clear();
             this.Select_campo2.getItems().clear();
-            try{ //Colum1, columscheck, campo1-2
-                String queue2 = "describe "+baseSelect+"."+this.Select_Tabla1.getValue();
+            try { //Colum1, columscheck, campo1-2
+                String queue2 = "describe " + baseSelect + "." + this.Select_Tabla1.getValue();
                 PreparedStatement preparedStatement = cx.prepareStatement(queue2);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
-                while(resultSet.next()){
-                    this.Select_num_columnas.getItems().addAll(this.Select_Tabla1.getValue()+"."+resultSet.getString(1));
-                    this.Select_campo1.getItems().addAll(this.Select_Tabla1.getValue()+"."+resultSet.getString(1));
-                    this.Select_campo2.getItems().addAll(this.Select_Tabla1.getValue()+"."+resultSet.getString(1));
+                while (resultSet.next()) {
+                    this.Select_num_columnas.getItems().addAll(this.Select_Tabla1.getValue() + "." + resultSet.getString(1));
+                    this.Select_campo1.getItems().addAll(this.Select_Tabla1.getValue() + "." + resultSet.getString(1));
+                    this.Select_campo2.getItems().addAll(this.Select_Tabla1.getValue() + "." + resultSet.getString(1));
                 }
-            }catch(Exception e){}
-            
-            try{
-                String queue2 = "describe "+baseSelect+"."+this.Select_Tabla2.getValue();
+            } catch (Exception e) {
+            }
+
+            try {
+                String queue2 = "describe " + baseSelect + "." + this.Select_Tabla2.getValue();
                 PreparedStatement preparedStatement = cx.prepareStatement(queue2);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
-                while(resultSet.next()){
-                    this.Select_num_columnas.getItems().addAll(this.Select_Tabla2.getValue()+"."+resultSet.getString(1));
-                    this.Select_campo1.getItems().addAll(this.Select_Tabla2.getValue()+"."+resultSet.getString(1));
-                    this.Select_campo2.getItems().addAll(this.Select_Tabla2.getValue()+"."+resultSet.getString(1));
+                while (resultSet.next()) {
+                    this.Select_num_columnas.getItems().addAll(this.Select_Tabla2.getValue() + "." + resultSet.getString(1));
+                    this.Select_campo1.getItems().addAll(this.Select_Tabla2.getValue() + "." + resultSet.getString(1));
+                    this.Select_campo2.getItems().addAll(this.Select_Tabla2.getValue() + "." + resultSet.getString(1));
                 }
-            }catch(Exception e){} 
-            
-            
+            } catch (Exception e) {
+            }
+
         }
-        
-    } 
-    
+
+    }
+
     @FXML
-    public void select_tablados(){
+    public void select_tablados() {
         this.Select_Columna2.getItems().clear();
         this.Select_num_columnas.getCheckModel().clearChecks();
-        this.Select_num_columnas.getItems().clear();        
+        this.Select_num_columnas.getItems().clear();
         this.Select_campo1.getItems().clear();
         this.Select_campo2.getItems().clear();
         //fill colum2 after evert change
-        try{
-            String queue2 = "describe "+baseSelect+"."+Select_Tabla2.getValue();
+        try {
+            String queue2 = "describe " + baseSelect + "." + Select_Tabla2.getValue();
             PreparedStatement preparedStatement = cx.prepareStatement(queue2);
             ResultSet resultSet = preparedStatement.executeQuery();
-            
-            while(resultSet.next()){
+
+            while (resultSet.next()) {
                 this.Select_Columna2.getItems().addAll(resultSet.getString(1));
             }
-        }catch(Exception e){} 
-        
+        } catch (Exception e) {
+        }
+
         //fill columscheck, campo1-2 after every change
-        try{ //Colum1, columscheck, campo1-2
-            String queue2 = "describe "+baseSelect+"."+Select_Tabla1.getValue();
+        try { //Colum1, columscheck, campo1-2
+            String queue2 = "describe " + baseSelect + "." + Select_Tabla1.getValue();
             PreparedStatement preparedStatement = cx.prepareStatement(queue2);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()){
-                this.Select_num_columnas.getItems().addAll(this.Select_Tabla1.getValue()+"."+resultSet.getString(1));
-                this.Select_campo1.getItems().addAll(this.Select_Tabla1.getValue()+"."+resultSet.getString(1));
-                this.Select_campo2.getItems().addAll(this.Select_Tabla1.getValue()+"."+resultSet.getString(1));
+            while (resultSet.next()) {
+                this.Select_num_columnas.getItems().addAll(this.Select_Tabla1.getValue() + "." + resultSet.getString(1));
+                this.Select_campo1.getItems().addAll(this.Select_Tabla1.getValue() + "." + resultSet.getString(1));
+                this.Select_campo2.getItems().addAll(this.Select_Tabla1.getValue() + "." + resultSet.getString(1));
             }
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
 
-        try{
-            String queue2 = "describe "+baseSelect+"."+Select_Tabla1.getValue();
+        try {
+            String queue2 = "describe " + baseSelect + "." + Select_Tabla1.getValue();
             PreparedStatement preparedStatement = cx.prepareStatement(queue2);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()){
-                this.Select_num_columnas.getItems().addAll(this.Select_Tabla2.getValue()+"."+resultSet.getString(1));
-                this.Select_campo1.getItems().addAll(this.Select_Tabla2.getValue()+"."+resultSet.getString(1));
-                this.Select_campo2.getItems().addAll(this.Select_Tabla2.getValue()+"."+resultSet.getString(1));
+            while (resultSet.next()) {
+                this.Select_num_columnas.getItems().addAll(this.Select_Tabla2.getValue() + "." + resultSet.getString(1));
+                this.Select_campo1.getItems().addAll(this.Select_Tabla2.getValue() + "." + resultSet.getString(1));
+                this.Select_campo2.getItems().addAll(this.Select_Tabla2.getValue() + "." + resultSet.getString(1));
             }
-        }catch(Exception e){} 
+        } catch (Exception e) {
+        }
     }
-    
-    public void prueba(){
-        try{
+
+    public void prueba() {
+        try {
             Select_Tabla1.getItems().clear();
             //Statement st = cx.createStatement();
             PreparedStatement preparedStatement = cx.prepareStatement("SHOW TABLES IN " + baseSelect);
             ResultSet resultSet = preparedStatement.executeQuery();
-            
 
             ObservableList<String> listadeTablas = FXCollections.observableArrayList();
-              while (resultSet.next()) {
-                  String nombre = resultSet.getString(1);
-                  listadeTablas.add(nombre);
-                  System.out.println(nombre);
-              }
-              Select_Tabla1.setItems(listadeTablas);
-              
-        }catch(Exception e){
-        
+            while (resultSet.next()) {
+                String nombre = resultSet.getString(1);
+                listadeTablas.add(nombre);
+                System.out.println(nombre);
+            }
+            Select_Tabla1.setItems(listadeTablas);
 
-            
+        } catch (Exception e) {
+
         }
     }
-    
-   
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        
-       }
-     
-    
+        this.Select_operador1.getItems().addAll(this.Operadores);
+        this.Select_operador2.getItems().addAll(this.Operadores);
+        this.Select_Union.getItems().addAll(this.Uniones);
+        ocultar();
+    }
+
     @FXML
     private void Volver(ActionEvent event) {
         Stage stage = (Stage) this.BT_Volver.getScene().getWindow();
@@ -276,7 +280,7 @@ public class ViewhacerconsultaController implements Initializable {
         this.Select_valor2.setDisable(true);
         this.Select_operador2.setDisable(true);
         this.Select_campo2.setDisable(true);
-        
+
     }
 
     @FXML
@@ -295,110 +299,103 @@ public class ViewhacerconsultaController implements Initializable {
 
     @FXML
     private void makeConsult(ActionEvent event) {
-        try{
-            ResultSet resultSet= null;
-            String colum="";
-            String colums="";
-            String from ="";
-            String where ="";
-            Select_Busqueda ="";
+        try {
+            ResultSet resultSet = null;
+            String colum = "";
+            String colums = "";
+            String from = "";
+            String where = "";
+            Select_Busqueda = "";
             colum = this.Select_num_columnas.getCheckModel().getCheckedItems().toString();
             colum = colum.replace("[", "");
             colum = colum.replace("]", "");
             String[] partes = colum.split(",");
-            for(int i = 0; i <= partes.length-1; i++){
+            for (int i = 0; i <= partes.length - 1; i++) {
                 String modify = partes[i];
-                String colName = modify;
-                colName = colName.replace(".", "_");
-                modify = modify.concat(" AS "+colName+",");
-                partes[i]=modify;
+                modify = modify.concat(",");
+                partes[i] = modify;
                 colums = colums + partes[i];
             }
             colum = colums;
-            colum = colum.substring(0,colum.length() - 1);
+            colum = colum.substring(0, colum.length() - 1);
 
-
-            if(this.Add_Tabla2.isSelected() == false && this.addCondition2.isSelected() == false){
-                from = baseSelect+"."+this.Select_Tabla1.getValue();
-                if(this.Add_condicion.isSelected() == true){
-                    where =" where "+this.Select_campo1.getValue()+" "+this.Select_operador1.getValue()+" "+this.Select_valor1.getText();
+            if (this.Add_Tabla2.isSelected() == false && this.addCondition2.isSelected() == false) {
+                from = baseSelect + "." + this.Select_Tabla1.getValue();
+                if (this.Add_condicion.isSelected() == true) {
+                    where = " where " + this.Select_campo1.getValue() + " " + this.Select_operador1.getValue() + " '" + this.Select_valor1.getText() + "'";
                 }
-                try{
-                    String queue2 = "Select "+colum+" From "+from+where;
+                try {
+                    String queue2 = "Select " + colum + " From " + from + where;
                     System.out.println(queue2);
-                    this.Select_Busqueda =queue2;
+                    this.Select_Busqueda = queue2;
                     PreparedStatement preparedStatement = cx.prepareStatement(queue2);
                     resultSet = preparedStatement.executeQuery();
                     System.out.println(resultSet);
-                }catch(Exception e){System.out.println("No se encontró resultado");}
-            }
-
-            else if(this.Add_Tabla2.isSelected() == true && this.addCondition2.isSelected() == false){
-                from = baseSelect+"."+this.Select_Tabla1.getValue()+", "+baseSelect+"."+this.Select_Tabla2.getValue();
-                where = " where "+this.Select_Tabla1.getValue()+"."+this.Select_Columna1.getValue()+"="+this.Select_Tabla2.getValue()+"."+this.Select_Columna2.getValue();
-                if(this.Add_condicion.isSelected() == true){
-                    where = " where "+this.Select_Tabla1.getValue()+"."+this.Select_Columna1.getValue()+"="+this.Select_Tabla2.getValue()+"."+this.Select_Columna2.getValue()+" And "+this.Select_campo1.getValue()+" "+this.Select_operador1.getValue()+" "+this.Select_valor1.getText();
+                } catch (Exception e) {
+                    System.out.println("No se encontró resultado");
                 }
-                try{
-                    String queue2 = "Select "+colum+" From "+from+where;
+            } else if (this.Add_Tabla2.isSelected() == true && this.addCondition2.isSelected() == false) {
+                from = baseSelect + "." + this.Select_Tabla1.getValue() + ", " + baseSelect + "." + this.Select_Tabla2.getValue();
+                where = " where " + this.Select_Tabla1.getValue() + "." + this.Select_Columna1.getValue() + "=" + this.Select_Tabla2.getValue() + "." + this.Select_Columna2.getValue();
+                if (this.Add_condicion.isSelected() == true) {
+                    where = " where " + this.Select_Tabla1.getValue() + "." + this.Select_Columna1.getValue() + "=" + this.Select_Tabla2.getValue() + "." + this.Select_Columna2.getValue() + " And " + this.Select_campo1.getValue() + " " + this.Select_operador1.getValue() + " " + this.Select_valor1.getText();
+                }
+                try {
+                    String queue2 = "Select " + colum + " From " + from + where;
                     System.out.println(queue2);
-                    this.Select_Busqueda =queue2;
+                    this.Select_Busqueda = queue2;
                     PreparedStatement preparedStatement = cx.prepareStatement(queue2);
                     resultSet = preparedStatement.executeQuery();
                     System.out.println(resultSet);
-                }catch(Exception e){}
-            }
-
-            else if(this.Add_Tabla2.isSelected() == false && this.addCondition2.isSelected() == true){
-                from = baseSelect+"."+this.Select_Tabla1.getValue();
-                if(this.Add_condicion.isSelected() == true){
-                    where = " where "+this.Select_campo1.getValue()+" "+this.Select_operador1.getValue()+" "+this.Select_valor1.getText()+" "+"AND"+" "+this.Select_campo2.getValue()+" "+this.Select_operador2.getValue()+" "+this.Select_valor2.getText();
+                } catch (Exception e) {
                 }
-                try{
-                    String queue2 = "Select "+colum+" From "+from+where;
+            } else if (this.Add_Tabla2.isSelected() == false && this.addCondition2.isSelected() == true) {
+                from = baseSelect + "." + this.Select_Tabla1.getValue();
+                if (this.Add_condicion.isSelected() == true) {
+                    where = " where " + this.Select_campo1.getValue() + " " + this.Select_operador1.getValue() + " " + this.Select_valor1.getText() + " " + "AND" + " " + this.Select_campo2.getValue() + " " + this.Select_operador2.getValue() + " " + this.Select_valor2.getText();
+                }
+                try {
+                    String queue2 = "Select " + colum + " From " + from + where;
                     System.out.println(queue2);
-                    this.Select_Busqueda =queue2;
+                    this.Select_Busqueda = queue2;
                     PreparedStatement preparedStatement = cx.prepareStatement(queue2);
                     resultSet = preparedStatement.executeQuery();
                     System.out.println(resultSet);
-                }catch(Exception e){}
-            }
-
-            else if(this.Add_Tabla2.isSelected() == true && this.addCondition2.isSelected() == true){
-                from = baseSelect+"."+this.Select_Tabla1.getValue()+", "+baseSelect+"."+this.Select_Tabla2.getValue();
-                where = " where "+this.Select_Tabla1.getValue()+"."+this.Select_Columna1.getValue()+"="+this.Select_Tabla2.getValue()+"."+this.Select_Columna2.getValue();
-                if(this.Add_condicion.isSelected() == true){
-                    where = " where "+this.Select_Tabla1.getValue()+"."+this.Select_Columna1.getValue()+"="+this.Select_Tabla2.getValue()+"."+this.Select_Columna2.getValue()+" And "+this.Select_campo1.getValue()+" "+this.Select_operador1.getValue()+" "+this.Select_valor1.getText()+" "+"AND"+" "+this.Select_campo2.getValue()+" "+this.Select_operador2.getValue()+" "+this.Select_valor2.getText();
+                } catch (Exception e) {
                 }
-                try{
-                    String queue2 = "Select "+colum+" From "+from+where;
+            } else if (this.Add_Tabla2.isSelected() == true && this.addCondition2.isSelected() == true) {
+                from = baseSelect + "." + this.Select_Tabla1.getValue() + ", " + baseSelect + "." + this.Select_Tabla2.getValue();
+                where = " where " + this.Select_Tabla1.getValue() + "." + this.Select_Columna1.getValue() + "=" + this.Select_Tabla2.getValue() + "." + this.Select_Columna2.getValue();
+                if (this.Add_condicion.isSelected() == true) {
+                    where = " where " + this.Select_Tabla1.getValue() + "." + this.Select_Columna1.getValue() + "=" + this.Select_Tabla2.getValue() + "." + this.Select_Columna2.getValue() + " And " + this.Select_campo1.getValue() + " " + this.Select_operador1.getValue() + " " + this.Select_valor1.getText() + " " + "AND" + " " + this.Select_campo2.getValue() + " " + this.Select_operador2.getValue() + " " + this.Select_valor2.getText();
+                }
+                try {
+                    String queue2 = "Select " + colum + " From " + from + where;
                     System.out.println(queue2);
-                    this.Select_Busqueda =queue2;
+                    this.Select_Busqueda = queue2;
                     PreparedStatement preparedStatement = cx.prepareStatement(queue2);
                     resultSet = preparedStatement.executeQuery();
                     System.out.println(resultSet);
-                }catch(Exception e){}
+                } catch (Exception e) {
+                }
             }
-            
+
             //Fill Table
             mostrarRegistros(this.Select_Busqueda, this.Tabla);
-            }
-            catch(Exception e){
-                JOptionPane.showMessageDialog(null, "Complete todos los campos");
-            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Complete todos los campos");
+        }
     }
-    
 
-    
     private List<Map<String, Object>> obtenerRegistros(String Que) throws SQLException {
         List<Map<String, Object>> registros = new ArrayList<>();
         if (cx != null) {
             String query = Que;
             PreparedStatement preparedStatement = cx.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
-            
+
             ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount(); 
+            int columnCount = metaData.getColumnCount();
 
             while (resultSet.next()) {
                 Map<String, Object> registro = new HashMap<>();
@@ -415,34 +412,50 @@ public class ViewhacerconsultaController implements Initializable {
         }
         return registros;
     }
-    
-        public void mostrarRegistros(String Que, TableView tablaActual) throws SQLException {
-            List<Map<String, Object>> registros = obtenerRegistros(Que);
-            
-            ObservableList<Map<String, Object>> registrosObservable = FXCollections.observableArrayList(registros);
-            
-            tablaActual.getColumns().clear();
-            
-            for (String columnName : registros.get(0).keySet()) {
-                TableColumn<Map<String, Object>, Object> column = new TableColumn<>(columnName);
-                column.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().get(columnName)));
-                tablaActual.getColumns().add(column);
-            }
-            
-            tablaActual.setItems(registrosObservable);
+
+    public void mostrarRegistros(String Que, TableView tablaActual) throws SQLException {
+        List<Map<String, Object>> registros = obtenerRegistros(Que);
+
+        ObservableList<Map<String, Object>> registrosObservable = FXCollections.observableArrayList(registros);
+
+        tablaActual.getColumns().clear();
+
+        for (String columnName : registros.get(0).keySet()) {
+            TableColumn<Map<String, Object>, Object> column = new TableColumn<>(columnName);
+            column.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().get(columnName)));
+            tablaActual.getColumns().add(column);
+        }
+
+        tablaActual.setItems(registrosObservable);
     }
 
     @FXML
     private void VistaGuardar(ActionEvent event) {
-        try{
+        try {
             String nombreVista = JOptionPane.showInputDialog(null, "Nombre de la Vista");
-            String query = "CREATE VIEW "+baseSelect+"."+nombreVista+" As "+this.Select_Busqueda;
+            String query = "CREATE VIEW " + baseSelect + "." + nombreVista + " As " + this.Select_Busqueda;
             System.out.println(query);
-            System.out.println(cx);
-            PreparedStatement preparedStatement = cx.prepareStatement(query);
-            preparedStatement.executeQuery();
+            Statement st1 = cx.createStatement();
+            st1.executeUpdate(query);
             JOptionPane.showMessageDialog(null, " La vista ha sido Guardada");
-        }catch(Exception e){System.out.println("No se encontró resultado");} 
+        } catch (Exception e) {
+            System.out.println("No se encontro resultado");
+        }
     }
     
+    private void ocultar(){
+        addCondition2.setVisible(false);
+        text.setVisible(false);
+        Select_Union.setVisible(false);
+        Select_campo2.setVisible(false);
+        Select_operador2.setVisible(false);
+        Select_valor2.setVisible(false);
+
+        
+    }
+
+    @FXML
+    private void Salir(ActionEvent event) {
+        System.exit(0);
+    }
 }
