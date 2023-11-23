@@ -28,6 +28,7 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
@@ -152,7 +153,30 @@ public class ViewTablasController implements Initializable {
     }
 
     @FXML
-    private void HacerConsulta(ActionEvent event) {
+    private void HacerConsulta(ActionEvent event) throws IOException {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Viewhacerconsulta.fxml"));
+            Parent root = loader.load();
+            ViewhacerconsultaController Viewhacerconsulta = loader.getController();
+            Viewhacerconsulta.setBaseSelect(getBaseSelect());
+            Viewhacerconsulta.setCx(getCx());
+            Viewhacerconsulta.prueba();
+            System.out.println(Viewhacerconsulta.getBaseSelect());
+            System.out.println(Viewhacerconsulta.getCx());
+            if ((Viewhacerconsulta.getBaseSelect() != null) && (Viewhacerconsulta.getCx() != null)) {
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);  // No se puede cambiar el tamaño de la ventana
+                stage.setScene(scene);
+                stage.showAndWait();
+            } else {
+                System.out.println("Error 1");
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Error 2");
+        }
     }
 
     @FXML
@@ -339,7 +363,7 @@ public class ViewTablasController implements Initializable {
             viewEstructuraTabla.setCx(getCx());
             viewEstructuraTabla.setBaseSelect(getBaseSelect());
             viewEstructuraTabla.setTablaSelect(getTablaSelect());
-            if ((viewEstructuraTabla.getBaseSelect() != null) && (viewEstructuraTabla.getCx() != null) && (viewEstructuraTabla.getTablaSelect()!= null)) {
+            if ((viewEstructuraTabla.getBaseSelect() != null) && (viewEstructuraTabla.getCx() != null) && (viewEstructuraTabla.getTablaSelect() != null)) {
                 viewEstructuraTabla.mostrarEstructura();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -377,7 +401,7 @@ public class ViewTablasController implements Initializable {
             return tipo;
         }
     }
-    
+
     private void abrirViewregistrosTabla() throws SQLException {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewRegistroTabla.fxml"));
@@ -386,7 +410,7 @@ public class ViewTablasController implements Initializable {
             viewRegistroTabla.setCx(getCx());
             viewRegistroTabla.setBaseSelect(getBaseSelect());
             viewRegistroTabla.setTablaSelect(getTablaSelect());
-            if ((viewRegistroTabla.getBaseSelect() != null) && (viewRegistroTabla.getCx() != null) && (viewRegistroTabla.getTablaSelect()!= null)) {
+            if ((viewRegistroTabla.getBaseSelect() != null) && (viewRegistroTabla.getCx() != null) && (viewRegistroTabla.getTablaSelect() != null)) {
                 viewRegistroTabla.mostrarRegistros();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();

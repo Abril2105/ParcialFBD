@@ -58,6 +58,7 @@ public class ViewLoginController implements Initializable {
         conexion.setUser(TF_Usuario.getText());
         conexion.setPassword(TF_Contrasena.getText());
         conexion.setUrl(TF_Servidor.getText(), TF_Puerto.getText());
+        conexion.setPort(TF_Puerto.getText());
         conexion.conectar();
         if (conexion.getCx() != null) {
             abrirViewBD();

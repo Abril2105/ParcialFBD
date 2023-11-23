@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ViewhacerconsultaController">
+   <children>
+      <TextField fx:id="Select_valor1" disable="true" layoutX="226.0" layoutY="136.0" opacity="0.71" text="VALOR" />
+      <Text layoutX="14.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingreso de condiciones ">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <TableView fx:id="Tabla" layoutX="18.0" layoutY="231.0" prefHeight="155.0" prefWidth="365.0" />
+      <Button fx:id="Vista" layoutX="409.0" layoutY="274.0" mnemonicParsing="false" onAction="#VistaGuardar" prefHeight="25.0" prefWidth="87.0" text="Guardar vista" />
+      <Button fx:id="Buscar" layoutX="410.0" layoutY="231.0" mnemonicParsing="false" onAction="#makeConsult" text="Buscar" />
+      <TextField fx:id="Select_valor2" disable="true" layoutX="226.0" layoutY="174.0" opacity="0.71" text="VALOR" />
+      <CheckBox fx:id="addCondition2" disable="true" layoutX="215.0" layoutY="110.0" mnemonicParsing="false" onAction="#Condition2added" text="Condición 2" />
+      <Text layoutX="417.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="=">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Text>
+      <Text layoutX="452.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Columnas a mostrar" />
+      <Button fx:id="BT_Volver" layoutX="480.0" layoutY="361.0" mnemonicParsing="false" onAction="#Volver" prefHeight="22.0" prefWidth="101.0" text="Volver" />
+      <CheckBox fx:id="Add_condicion" layoutX="316.0" layoutY="110.0" mnemonicParsing="false" onAction="#Check_addcondicion" text="Agregar condición" />
+      <CheckBox fx:id="Add_Tabla2" layoutX="117.0" layoutY="47.0" mnemonicParsing="false" onAction="#Check_addtabla2" text="Usar segunda tabla" />
+      <Text layoutX="25.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Seleccione Tabla" />
+      <ComboBox fx:id="Select_Tabla1" layoutX="33.0" layoutY="43.0" onAction="#select_tablauno" prefHeight="25.0" prefWidth="72.0" />
+      <ComboBox fx:id="Select_Tabla2" disable="true" layoutX="268.0" layoutY="43.0" onAction="#select_tablados" prefHeight="25.0" prefWidth="66.0" />
+      <ComboBox fx:id="Select_Columna1" disable="true" layoutX="358.0" layoutY="43.0" prefHeight="25.0" prefWidth="18.0" />
+      <ComboBox fx:id="Select_Columna2" disable="true" layoutX="446.0" layoutY="43.0" prefHeight="25.0" prefWidth="18.0" />
+      <ComboBox fx:id="Select_campo2" disable="true" layoutX="25.0" layoutY="175.0" prefHeight="25.0" prefWidth="96.0" />
+      <ComboBox fx:id="Select_operador2" disable="true" layoutX="136.0" layoutY="175.0" prefHeight="25.0" prefWidth="72.0" />
+      <ComboBox fx:id="Select_campo1" disable="true" layoutX="25.0" layoutY="136.0" prefHeight="25.0" prefWidth="96.0" />
+      <ComboBox fx:id="Select_operador1" disable="true" layoutX="136.0" layoutY="136.0" prefHeight="25.0" prefWidth="72.0" />
+      <CheckComboBox fx:id="Select_num_columnas" layoutX="446.0" layoutY="163.0" prefHeight="25.0" prefWidth="119.0" />
+   </children>
+</AnchorPane>
