@@ -13,6 +13,15 @@ public class Conexion {
     private String password = "";
     private String driver = "com.mysql.cj.jdbc.Driver";
     private Connection cx;
+    private String port = "";
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
 
     //Constructor
     public Conexion() {
