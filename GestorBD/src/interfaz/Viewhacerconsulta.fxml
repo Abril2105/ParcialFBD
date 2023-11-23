@@ -10,37 +10,46 @@
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ViewhacerconsultaController">
+<AnchorPane id="AnchorPane" prefHeight="425.0" prefWidth="836.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ViewhacerconsultaController">
    <children>
-      <TextField fx:id="Select_valor1" disable="true" layoutX="226.0" layoutY="136.0" opacity="0.71" text="VALOR" />
-      <Text layoutX="14.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingreso de condiciones ">
+      <TextField fx:id="Select_valor1" disable="true" layoutX="637.0" layoutY="161.0" opacity="0.71" />
+      <Text layoutX="425.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingreso de condiciones ">
          <font>
             <Font size="16.0" />
          </font>
       </Text>
-      <TableView fx:id="Tabla" layoutX="18.0" layoutY="231.0" prefHeight="155.0" prefWidth="365.0" />
-      <Button fx:id="Vista" layoutX="409.0" layoutY="274.0" mnemonicParsing="false" onAction="#VistaGuardar" prefHeight="25.0" prefWidth="87.0" text="Guardar vista" />
-      <Button fx:id="Buscar" layoutX="410.0" layoutY="231.0" mnemonicParsing="false" onAction="#makeConsult" text="Buscar" />
-      <TextField fx:id="Select_valor2" disable="true" layoutX="226.0" layoutY="174.0" opacity="0.71" text="VALOR" />
-      <CheckBox fx:id="addCondition2" disable="true" layoutX="215.0" layoutY="110.0" mnemonicParsing="false" onAction="#Condition2added" text="Condición 2" />
-      <Text layoutX="417.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="=">
+      <TableView fx:id="Tabla" layoutX="6.0" layoutY="5.0" prefHeight="414.0" prefWidth="412.0" />
+      <Button fx:id="Vista" layoutX="426.0" layoutY="374.0" mnemonicParsing="false" onAction="#VistaGuardar" prefHeight="25.0" prefWidth="87.0" text="Guardar vista" />
+      <Button fx:id="Buscar" layoutX="426.0" layoutY="337.0" mnemonicParsing="false" onAction="#makeConsult" text="Buscar" />
+      <TextField fx:id="Select_valor2" disable="true" layoutX="637.0" layoutY="231.0" opacity="0.71" />
+      <CheckBox fx:id="addCondition2" disable="true" layoutX="602.0" layoutY="134.0" mnemonicParsing="false" onAction="#Condition2added" text="Condición 2" />
+      <Text layoutX="710.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="=">
          <font>
             <Font size="26.0" />
          </font>
       </Text>
-      <Text layoutX="452.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Columnas a mostrar" />
-      <Button fx:id="BT_Volver" layoutX="480.0" layoutY="361.0" mnemonicParsing="false" onAction="#Volver" prefHeight="22.0" prefWidth="101.0" text="Volver" />
-      <CheckBox fx:id="Add_condicion" layoutX="316.0" layoutY="110.0" mnemonicParsing="false" onAction="#Check_addcondicion" text="Agregar condición" />
-      <CheckBox fx:id="Add_Tabla2" layoutX="117.0" layoutY="47.0" mnemonicParsing="false" onAction="#Check_addtabla2" text="Usar segunda tabla" />
-      <Text layoutX="25.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Seleccione Tabla" />
-      <ComboBox fx:id="Select_Tabla1" layoutX="33.0" layoutY="43.0" onAction="#select_tablauno" prefHeight="25.0" prefWidth="72.0" />
-      <ComboBox fx:id="Select_Tabla2" disable="true" layoutX="268.0" layoutY="43.0" onAction="#select_tablados" prefHeight="25.0" prefWidth="66.0" />
-      <ComboBox fx:id="Select_Columna1" disable="true" layoutX="358.0" layoutY="43.0" prefHeight="25.0" prefWidth="18.0" />
-      <ComboBox fx:id="Select_Columna2" disable="true" layoutX="446.0" layoutY="43.0" prefHeight="25.0" prefWidth="18.0" />
-      <ComboBox fx:id="Select_campo2" disable="true" layoutX="25.0" layoutY="175.0" prefHeight="25.0" prefWidth="96.0" />
-      <ComboBox fx:id="Select_operador2" disable="true" layoutX="136.0" layoutY="175.0" prefHeight="25.0" prefWidth="72.0" />
-      <ComboBox fx:id="Select_campo1" disable="true" layoutX="25.0" layoutY="136.0" prefHeight="25.0" prefWidth="96.0" />
-      <ComboBox fx:id="Select_operador1" disable="true" layoutX="136.0" layoutY="136.0" prefHeight="25.0" prefWidth="72.0" />
-      <CheckComboBox fx:id="Select_num_columnas" layoutX="446.0" layoutY="163.0" prefHeight="25.0" prefWidth="119.0" />
+      <Text layoutX="424.0" layoutY="287.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Columnas a mostrar" />
+      <Button fx:id="BT_Volver" layoutX="721.0" layoutY="386.0" mnemonicParsing="false" onAction="#Volver" prefHeight="22.0" prefWidth="101.0" text="Volver" />
+      <CheckBox fx:id="Add_condicion" layoutX="703.0" layoutY="134.0" mnemonicParsing="false" onAction="#Check_addcondicion" text="Agregar condición" />
+      <CheckBox fx:id="Add_Tabla2" layoutX="645.0" layoutY="12.0" mnemonicParsing="false" onAction="#Check_addtabla2" text="Usar segunda tabla">
+         <font>
+            <Font size="16.0" />
+         </font></CheckBox>
+      <Text layoutX="436.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Seleccione Tabla">
+         <font>
+            <Font size="16.0" />
+         </font></Text>
+      <ComboBox fx:id="Select_Tabla1" layoutX="436.0" layoutY="36.0" onAction="#select_tablauno" prefHeight="25.0" prefWidth="117.0" />
+      <ComboBox fx:id="Select_Tabla2" disable="true" layoutX="670.0" layoutY="37.0" onAction="#select_tablados" prefHeight="25.0" prefWidth="139.0" />
+      <ComboBox fx:id="Select_Columna1" disable="true" layoutX="602.0" layoutY="79.0" prefHeight="25.0" prefWidth="106.0" />
+      <ComboBox fx:id="Select_Columna2" disable="true" layoutX="731.0" layoutY="79.0" prefHeight="25.0" prefWidth="106.0" />
+      <ComboBox fx:id="Select_campo2" disable="true" layoutX="436.0" layoutY="232.0" prefHeight="25.0" prefWidth="96.0" />
+      <ComboBox fx:id="Select_operador2" disable="true" layoutX="547.0" layoutY="232.0" prefHeight="25.0" prefWidth="72.0" />
+      <ComboBox fx:id="Select_campo1" disable="true" layoutX="436.0" layoutY="161.0" prefHeight="25.0" prefWidth="96.0" />
+      <ComboBox fx:id="Select_operador1" disable="true" layoutX="547.0" layoutY="161.0" prefHeight="25.0" prefWidth="72.0" />
+      <CheckComboBox fx:id="Select_num_columnas" layoutX="426.0" layoutY="299.0" prefHeight="25.0" prefWidth="119.0" />
+      <ComboBox fx:id="Select_Union" disable="true" layoutX="585.0" layoutY="200.0" prefHeight="25.0" prefWidth="72.0" />
+      <Text fx:id="text" layoutX="433.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Seleccione el tipo de union:" />
+      <Button fx:id="BT_Salir" layoutX="607.0" layoutY="386.0" mnemonicParsing="false" onAction="#Salir" prefHeight="22.0" prefWidth="101.0" text="Salir" />
    </children>
 </AnchorPane>

@@ -171,7 +171,6 @@ public class ViewBasesDatosController implements Initializable {
             while (resultSet.next()) {
                 String nombre = resultSet.getString("schema_name");
                 basesDeDatos.add(nombre);
-                System.out.println(nombre);
             }
             TV_DB.setItems(basesDeDatos);
 

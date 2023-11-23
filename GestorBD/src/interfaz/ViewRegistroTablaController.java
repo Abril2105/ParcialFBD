@@ -160,7 +160,6 @@ public class ViewRegistroTablaController implements Initializable {
 
         String dynamicValues = "";
         String dynamicColum = "";
-        System.out.println("EntrandoAdd");
 
         try {
             String query = "SELECT * FROM " + getBaseSelect() + "." + getTablaSelect();
@@ -169,10 +168,8 @@ public class ViewRegistroTablaController implements Initializable {
 
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
-            System.out.println(columnCount);
 
             for (int i = 1; i <= columnCount; i++) {
-                System.out.println(i);
 
                 String argumento = JOptionPane.showInputDialog(null, "Ingrese información del nuevo registro: " + metaData.getColumnName(i));
 
@@ -209,7 +206,7 @@ public class ViewRegistroTablaController implements Initializable {
                         dynamicColum = dynamicColum + metaData.getColumnName(i);
                     }
 
-                    System.out.println(dynamicValues + " entro en final");
+                    System.out.println(dynamicValues + " Ultimo valor");
 
                 } else {
 
@@ -220,7 +217,7 @@ public class ViewRegistroTablaController implements Initializable {
                         dynamicValues = dynamicValues + argumento + ",";
                         dynamicColum = dynamicColum + metaData.getColumnName(i) + ",";
                     }
-                    System.out.println(dynamicValues + " entro en no final");
+                    System.out.println(dynamicValues + " no es el ultimo valor");
                 }
             }
 
@@ -245,51 +242,124 @@ public class ViewRegistroTablaController implements Initializable {
 
         if (this.CB_Llave.getValue() != null) {
             int index = 0;
-            try {
-                Object[] keynames = this.TV_RegistroTabla.getSelectionModel().getSelectedItem().keySet().toArray();
-                for (int i = 0; i <= keynames.length - 1; i++) {
-                    if (keynames[i].toString().equals(this.CB_Llave.getValue())) {
-                        index = i;
-                    }
+            Object[] keynames = this.TV_RegistroTabla.getSelectionModel().getSelectedItem().keySet().toArray();
+            for (int i = 0; i <= keynames.length - 1; i++) {
+                if (keynames[i].toString().equals(this.CB_Llave.getValue())) {
+                    index = i;
                 }
-                Object[] keyvalues = this.TV_RegistroTabla.getSelectionModel().getSelectedItem().values().toArray();
-                String del = "\"" + keyvalues[index].toString() + "\"";
-                System.out.println(keyvalues[index].toString());
-
-                this.informacionFila = this.TV_RegistroTabla.getSelectionModel().getSelectedItem();
-
-                String queue2 = "DELETE FROM " + baseSelect + "." + tablaSelect + " WHERE " + this.CB_Llave.getValue() + " = " + keyvalues[index];
-
-                try {
-                    Statement st1 = this.cx.createStatement();
-                    st1.executeUpdate(queue2);
-                    System.out.println(queue2);
-                } catch (SQLException e) {
-                    queue2 = "DELETE FROM " + baseSelect + "." + tablaSelect + " WHERE " + this.CB_Llave.getValue() + " = " + del;
-                    System.out.println(queue2);
-                    Statement st1 = this.cx.createStatement();
-                    st1.executeUpdate(queue2);
-                }
-                System.out.println(queue2);
-
-                //String queu = "DELETE FROM " + this.Ver_T.getValue() + "WHERE " + key + "= ";
-                JOptionPane.showMessageDialog(null, "Registro Borrado Correctamente");
-            } catch (SQLException e) {
-                System.out.println("Algo ha salido mal!");
             }
+            Object[] keyvalues = this.TV_RegistroTabla.getSelectionModel().getSelectedItem().values().toArray();
+            String del = "\"" + keyvalues[index].toString() + "\"";
+            this.informacionFila = this.TV_RegistroTabla.getSelectionModel().getSelectedItem();
+            String queue2 = "DELETE FROM " + baseSelect + "." + tablaSelect + " WHERE " + this.CB_Llave.getValue() + " = " + keyvalues[index];
+            try {
+                Statement st1 = this.cx.createStatement();
+                st1.executeUpdate(queue2);
+            } catch (SQLException e) {
+                System.out.println("No se elimino el registro");
+            }
+            System.out.println(queue2);
+            JOptionPane.showMessageDialog(null, "Registro eliminado");
         } else {
-            JOptionPane.showMessageDialog(null, "Seleccione Una key");
+            JOptionPane.showMessageDialog(null, "Recuerde seleccionar una llave");
         }
         mostrarRegistros();
     }
 
     @FXML
-    private void ActualizarRegistro(ActionEvent event) {
-        
+    private void ActualizarRegistro(ActionEvent event) throws SQLException {
+
+        if (this.CB_Llave.getValue() != null) {
+
+            String dynamicValues = "";
+            int index = 0;
+
+            Object[] keynames = this.TV_RegistroTabla.getSelectionModel().getSelectedItem().keySet().toArray();
+            for (int i = 0; i <= keynames.length - 1; i++) {
+                if (keynames[i].toString().equals(this.CB_Llave.getValue())) {
+                    index = i;
+                }
+            }
+            Object[] keyvalues = this.TV_RegistroTabla.getSelectionModel().getSelectedItem().values().toArray();
+            String del = "\"" + keyvalues[index].toString() + "\"";
+
+            try {
+
+                String query = "SELECT * FROM " + getBaseSelect() + "." + getTablaSelect();
+                PreparedStatement preparedStatement = cx.prepareStatement(query);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+
+                for (int i = 1; i <= columnCount; i++) {
+
+                    String argumento = JOptionPane.showInputDialog(null, "Ingrese información del nuevo registro: " + metaData.getColumnName(i));
+
+                    int entero = 0;
+                    int fraccionario = 0;
+  
+                    try {
+
+                        int prueba = Integer.parseInt(argumento);
+                    } catch (NumberFormatException e) {
+                        entero = 1;
+                    }
+
+                    try {
+
+                        float prueba = Float.parseFloat(argumento);
+
+                    } catch (NumberFormatException e) {
+                        fraccionario = 1;
+                    }
+
+                    if (i == columnCount) {
+
+                        if (entero == 1 && fraccionario == 1) {
+                            dynamicValues = dynamicValues + metaData.getColumnName(i) + " = " + "'" + argumento + "'";
+
+                        } else {
+                            dynamicValues = dynamicValues + metaData.getColumnName(i) + " = " + argumento;
+
+                        }
+
+                        System.out.println(dynamicValues + " Ultimo valor");
+
+                    } else {
+
+                        if (entero == 1 && fraccionario == 1) {
+                            dynamicValues = dynamicValues + metaData.getColumnName(i) + " = " + "'" + argumento + "'" + ",";
+                        } else {
+                            dynamicValues = dynamicValues + metaData.getColumnName(i) + " = " + argumento + ",";
+                        }
+                        System.out.println(dynamicValues + " No es el ultimo");
+                    }
+                }
+
+            } catch (Exception e) {
+            }
+
+            try {
+                String query2 = "UPDATE " + getBaseSelect() + "." + getTablaSelect() + " SET " + dynamicValues + " WHERE " + this.CB_Llave.getValue() + " = " + del;
+                System.out.println(query2);
+                Statement st1 = cx.createStatement();
+                st1.executeUpdate(query2);
+
+            } catch (Exception e) {
+
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Recuerde seleccionar una llave");
+        }
+
+        mostrarRegistros();
+
     }
 
     private void tomarLlaves() {
         try { //SelectKey
+            CB_Llave.getItems().clear();
             String queue2 = "describe " + baseSelect + "." + tablaSelect;
             Statement st1 = this.cx.createStatement();
             ResultSet res = st1.executeQuery(queue2);
