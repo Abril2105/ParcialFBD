@@ -161,8 +161,6 @@ public class ViewTablasController implements Initializable {
             Viewhacerconsulta.setBaseSelect(getBaseSelect());
             Viewhacerconsulta.setCx(getCx());
             Viewhacerconsulta.prueba();
-            System.out.println(Viewhacerconsulta.getBaseSelect());
-            System.out.println(Viewhacerconsulta.getCx());
             if ((Viewhacerconsulta.getBaseSelect() != null) && (Viewhacerconsulta.getCx() != null)) {
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -205,7 +203,6 @@ public class ViewTablasController implements Initializable {
                                 }
                             }
                             crear = crear + ")";
-                            System.out.println(crear);
 
                             Statement Statement = connection.createStatement();
                             connection.createStatement().executeUpdate("USE " + baseSelect);
@@ -252,7 +249,6 @@ public class ViewTablasController implements Initializable {
             while (resultSet.next()) {
                 String nombreTabla = resultSet.getString(1);
                 tablas.add(nombreTabla);
-                System.out.println(nombreTabla);
             }
             TV_Tablas.setItems(tablas);
 
@@ -338,7 +334,6 @@ public class ViewTablasController implements Initializable {
 
             dialog.getDialogPane().setContent(gridPane);
             int a = i;
-            System.out.println(a);
             dialog.setResultConverter(dialogButton -> {
 
                 if (dialogButton == crearButton) {
@@ -352,11 +347,9 @@ public class ViewTablasController implements Initializable {
                     }
                     if (a == 0) {
                         String llave = "PRIMARY KEY";
-                        System.out.println("si");
                         return new Columna(nombre, tipo,llave);
                         
                     }else{
-                        System.out.println("no");
                         return new Columna(nombre, tipo);
                     }
                 }
