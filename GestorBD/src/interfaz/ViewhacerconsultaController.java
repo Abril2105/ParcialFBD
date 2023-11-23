@@ -70,7 +70,6 @@ public class ViewhacerconsultaController implements Initializable {
     
     private Connection  cx;
     private String baseSelect;
-    private Conexion conex;
     
     @FXML
     private CheckBox Add_condicion;
@@ -439,6 +438,7 @@ public class ViewhacerconsultaController implements Initializable {
             String nombreVista = JOptionPane.showInputDialog(null, "Nombre de la Vista");
             String query = "CREATE VIEW "+baseSelect+"."+nombreVista+" As "+this.Select_Busqueda;
             System.out.println(query);
+            System.out.println(cx);
             PreparedStatement preparedStatement = cx.prepareStatement(query);
             preparedStatement.executeQuery();
             JOptionPane.showMessageDialog(null, " La vista ha sido Guardada");
