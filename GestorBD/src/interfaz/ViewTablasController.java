@@ -170,7 +170,12 @@ public class ViewTablasController implements Initializable {
                             String crear = "CREATE TABLE " + nombreTabla + " (";
                             for (int i = 0; i < columnas.size(); i++) {
                                 Columna columna = columnas.get(i);
-                                crear = crear + columna.getNombre() + " " + columna.getTipo();
+                                if(columna.getLlave() == null){
+                                    crear = crear + columna.getNombre() + " " + columna.getTipo();
+                                }else{
+                                    crear = crear + columna.getNombre() + " " + columna.getTipo() + " " + columna.getLlave();
+                                }
+                                
                                 if (i < columnas.size() - 1) {
                                     crear = crear + ", ";
                                 }
@@ -308,9 +313,12 @@ public class ViewTablasController implements Initializable {
             gridPane.add(tipoComboBox, 1, 1);
 
             dialog.getDialogPane().setContent(gridPane);
-
+            int a = i;
+            System.out.println(a);
             dialog.setResultConverter(dialogButton -> {
+
                 if (dialogButton == crearButton) {
+
                     String nombre = nombreField.getText();
                     String tipo = tipoComboBox.getValue();
 
@@ -318,8 +326,15 @@ public class ViewTablasController implements Initializable {
                         mostrarAlertaError("Ingrese todos los detalles de la columna");
                         return null;
                     }
-
-                    return new Columna(nombre, tipo);
+                    if (a == 0) {
+                        String llave = "PRIMARY KEY";
+                        System.out.println("si");
+                        return new Columna(nombre, tipo,llave);
+                        
+                    }else{
+                        System.out.println("no");
+                        return new Columna(nombre, tipo);
+                    }
                 }
                 return null;
             });
@@ -339,7 +354,7 @@ public class ViewTablasController implements Initializable {
             viewEstructuraTabla.setCx(getCx());
             viewEstructuraTabla.setBaseSelect(getBaseSelect());
             viewEstructuraTabla.setTablaSelect(getTablaSelect());
-            if ((viewEstructuraTabla.getBaseSelect() != null) && (viewEstructuraTabla.getCx() != null) && (viewEstructuraTabla.getTablaSelect()!= null)) {
+            if ((viewEstructuraTabla.getBaseSelect() != null) && (viewEstructuraTabla.getCx() != null) && (viewEstructuraTabla.getTablaSelect() != null)) {
                 viewEstructuraTabla.mostrarEstructura();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -363,10 +378,18 @@ public class ViewTablasController implements Initializable {
 
         private final String nombre;
         private final String tipo;
+        private final String llave;
 
         public Columna(String nombre, String tipo) {
             this.nombre = nombre;
             this.tipo = tipo;
+            this.llave = null;
+        }
+
+        public Columna(String nombre, String tipo, String llave) {
+            this.nombre = nombre;
+            this.tipo = tipo;
+            this.llave = llave;
         }
 
         public String getNombre() {
@@ -376,8 +399,13 @@ public class ViewTablasController implements Initializable {
         public String getTipo() {
             return tipo;
         }
+
+        public String getLlave() {
+            return llave;
+        }
+
     }
-    
+
     private void abrirViewregistrosTabla() throws SQLException {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewRegistroTabla.fxml"));
@@ -386,7 +414,7 @@ public class ViewTablasController implements Initializable {
             viewRegistroTabla.setCx(getCx());
             viewRegistroTabla.setBaseSelect(getBaseSelect());
             viewRegistroTabla.setTablaSelect(getTablaSelect());
-            if ((viewRegistroTabla.getBaseSelect() != null) && (viewRegistroTabla.getCx() != null) && (viewRegistroTabla.getTablaSelect()!= null)) {
+            if ((viewRegistroTabla.getBaseSelect() != null) && (viewRegistroTabla.getCx() != null) && (viewRegistroTabla.getTablaSelect() != null)) {
                 viewRegistroTabla.mostrarRegistros();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
